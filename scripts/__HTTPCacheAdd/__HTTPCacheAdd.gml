@@ -16,5 +16,9 @@ function __HTTPCacheAdd(_hash, _durationMins)
     }
     
     _cacheTimeMap[? _hash] = string_format(_elapseTime, 0, 10);
-    __HTTPCacheSaveString(_system.__cacheDirectory + "manifest.json", json_encode(_cacheTimeMap));
+    
+    if (HTTP_CACHE_AVAILABLE)
+    {
+        __HTTPCacheSaveString(_system.__cacheDirectory + "manifest.json", json_encode(_cacheTimeMap));
+    }
 }

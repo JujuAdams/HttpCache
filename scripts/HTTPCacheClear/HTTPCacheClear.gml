@@ -9,7 +9,11 @@ function HTTPCacheClear()
     static _httpRequestMap = _system.__httpRequestMap;
     
     ds_map_clear(_httpRequestMap);
-    directory_destroy(_system.__cacheDirectory);
+    
+    if (HTTP_CACHE_AVAILABLE)
+    {
+        directory_destroy(_system.__cacheDirectory);
+    }
     
     if (HTTP_CACHE_VERBOSE)
     {

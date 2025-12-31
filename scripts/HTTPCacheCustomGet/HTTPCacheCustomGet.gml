@@ -22,7 +22,7 @@ function HTTPCacheCustomGet(_key, _default = undefined)
     var _value = _default;
     
     var _hash = md5_string_utf8(_key);
-    if (__HTTPCacheExists(_hash))
+    if (HTTP_CACHE_AVAILABLE && __HTTPCacheExists(_hash))
     {
         try
         {

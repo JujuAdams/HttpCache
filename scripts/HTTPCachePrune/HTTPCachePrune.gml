@@ -11,6 +11,16 @@ function HTTPCachePrune()
 {
     static _cacheTimeMap = __HTTPCacheSystem().__cacheTimeMap;
     
+    if (HTTP_CACHE_AVAILABLE)
+    {
+        if (HTTP_CACHE_VERBOSE)
+        {
+            __HTTPCacheTrace("Warning! Cache pruning not supported on this platform");
+        }
+        
+        return;
+    }
+    
     if (HTTP_CACHE_VERBOSE)
     {
         __HTTPCacheTrace($"Starting cache pruning. Current UTC time is {date_datetime_string(__HTTPGetUTCTime())}, {ds_map_size(_cacheTimeMap)} entries in cache");

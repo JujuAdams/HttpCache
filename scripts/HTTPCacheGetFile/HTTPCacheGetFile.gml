@@ -29,37 +29,14 @@ function HTTPCacheGetFile(_url, _destinationPath, _callback, _callbackData = und
     
     __HTTPEnsureObject();
     
-    var _hash = md5_string_utf8(_url);
-    if ((not _ignoreCache) && __HTTPCacheExists(_hash))
+    if (not HTTP_CACHE_AVAILABLE)
     {
-        if (HTTP_CACHE_VERBOSE)
-        {
-            __HTTPCacheTrace($"File has been cached for \"{_url}\" ({_hash})");
-        }
-        
-        file_copy(__HTTPCacheGetPath(_hash), _destinationPath);
-        
-        if (is_callable(_callback))
-        {
-            call_later(1, time_source_units_frames, method({
-                __destination:  _destinationPath,
-                __callback:     _callback,
-                __callbackData: _callbackData,
-            },
-            function()
-            {
-                __callback(true, __destination, __callbackData);
-            }), false);
-        }
-    }
-    else
-    {
-        var _requestID = http_get_file(_url, __HTTPCacheGetPath(_hash));
+        var _requestID = http_get_file(_url, _destinationPath);
         if (_requestID < 0)
         {
             if (HTTP_CACHE_VERBOSE)
             {
-                __HTTPCacheTrace($"`http_get_file()` failed for \"{_url}\" ({_hash})");
+                __HTTPCacheTrace($"`http_get_file()` failed for \"{_url}\"");
             }
             
             if (is_callable(__callback))
@@ -79,10 +56,69 @@ function HTTPCacheGetFile(_url, _destinationPath, _callback, _callbackData = und
         {
             if (HTTP_CACHE_VERBOSE)
             {
-                __HTTPCacheTrace($"Executed `http_get_file()` for \"{_url}\" ({_hash})");
+                __HTTPCacheTrace($"Executed `http_get_file()` for \"{_url}\"");
             }
             
-            _httpFileMap[? _requestID] = new __HTTPClassCacheFileGet(_hash, _destinationPath, _callback, _callbackData, _system.__globalDurationMins);
+            _httpFileMap[? _requestID] = new __HTTPClassCacheFileGet(undefined, _destinationPath, _callback, _callbackData, _system.__globalDurationMins);
+        }
+    }
+    else
+    {
+        var _hash = md5_string_utf8(_url);
+        if ((not _ignoreCache) && __HTTPCacheExists(_hash))
+        {
+            if (HTTP_CACHE_VERBOSE)
+            {
+                __HTTPCacheTrace($"File has been cached for \"{_url}\" ({_hash})");
+            }
+            
+            file_copy(__HTTPCacheGetPath(_hash), _destinationPath);
+            
+            if (is_callable(_callback))
+            {
+                call_later(1, time_source_units_frames, method({
+                    __destination:  _destinationPath,
+                    __callback:     _callback,
+                    __callbackData: _callbackData,
+                },
+                function()
+                {
+                    __callback(true, __destination, __callbackData);
+                }), false);
+            }
+        }
+        else
+        {
+            var _requestID = http_get_file(_url, __HTTPCacheGetPath(_hash));
+            if (_requestID < 0)
+            {
+                if (HTTP_CACHE_VERBOSE)
+                {
+                    __HTTPCacheTrace($"`http_get_file()` failed for \"{_url}\" ({_hash})");
+                }
+                
+                if (is_callable(__callback))
+                {
+                    call_later(1, time_source_units_frames, method({
+                        __destination:  _destinationPath,
+                        __callback:     _callback,
+                        __callbackData: _callbackData,
+                    },
+                    function()
+                    {
+                        __callback(false, __destination, __callbackData);
+                    }), false);
+                }
+            }
+            else
+            {
+                if (HTTP_CACHE_VERBOSE)
+                {
+                    __HTTPCacheTrace($"Executed `http_get_file()` for \"{_url}\" ({_hash})");
+                }
+                
+                _httpFileMap[? _requestID] = new __HTTPClassCacheFileGet(_hash, _destinationPath, _callback, _callbackData, _system.__globalDurationMins);
+            }
         }
     }
 }

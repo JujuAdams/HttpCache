@@ -4,5 +4,15 @@
 
 function __HTTPCacheExists(_hash)
 {
-    return (__HTTPGetUTCTime() > __HTTPCacheGetElapsedTime(_hash))? false : file_exists(__HTTPCacheGetPath(_hash));
+    if (not HTTP_CACHE_AVAILABLE)
+    {
+        return false;
+    }
+    
+    if (__HTTPGetUTCTime() > __HTTPCacheGetElapsedTime(_hash))
+    {
+        return false;
+    }
+    
+    return file_exists(__HTTPCacheGetPath(_hash));
 }

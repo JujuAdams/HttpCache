@@ -8,7 +8,7 @@ function __HTTPCacheSystem()
     _system = {};
     with(_system)
     {
-        __HTTPCacheTrace("Welcome to HTTP Cache by Juju Adams! This is version 1.0.0, 2025-12-31");
+        __HTTPCacheTrace($"Welcome to HTTP Cache by Juju Adams! This is version {HTTP_CACHE_VERSION}, {HTTP_CACHE_DATE}");
         
         __cacheDirectory = game_save_id + "httpCache/";
         
@@ -23,7 +23,14 @@ function __HTTPCacheSystem()
             __HTTPCacheTrace($"Cache duration defaults to {__globalDurationMins} minutes");
         }
         
-        if (HTTP_CACHE_CLEAR_ON_BOOT)
+        if (not HTTP_CACHE_AVAILABLE)
+        {
+            __HTTPCacheTrace("Warning! Disk cache not available on this platform");
+            
+            __cacheTimeMap = ds_map_create();
+            HTTPCacheClear();
+        }
+        else if (HTTP_CACHE_CLEAR_ON_BOOT)
         {
             __cacheTimeMap = ds_map_create();
             HTTPCacheClear();

@@ -34,8 +34,7 @@ function HTTPCacheRequest(_url, _method, _headerMap, _body, _callback, _callback
     
     var _hashKey = $"{_url}::{_method}::{json_encode(_headerMap)}::{_body}";
     var _hash = md5_string_utf8(_hashKey);
-    
-    if ((not _ignoreCache) && __HTTPCacheExists(_hash))
+    if (HTTP_CACHE_AVAILABLE && (not _ignoreCache) && __HTTPCacheExists(_hash))
     {
         if (not is_callable(_callback))
         {

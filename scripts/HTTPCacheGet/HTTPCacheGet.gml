@@ -28,7 +28,7 @@ function HTTPCacheGet(_url, _callback, _callbackData = undefined, _ignoreCache =
     __HTTPEnsureObject();
     
     var _hash = md5_string_utf8(_url);
-    if ((not _ignoreCache) && __HTTPCacheExists(_hash))
+    if (HTTP_CACHE_AVAILABLE && (not _ignoreCache) && __HTTPCacheExists(_hash))
     {
         if (not is_callable(_callback))
         {
