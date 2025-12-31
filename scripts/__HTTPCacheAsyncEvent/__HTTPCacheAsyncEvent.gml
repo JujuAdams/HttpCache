@@ -59,7 +59,8 @@ function __HTTPCacheAsyncEvent()
         {
             ds_map_delete(_httpRequestMap, _id);
             
-            var _success = __HTTPResponseIsSuccess(async_load[? "http_status"]);
+            var _httpStatus = async_load[? "http_status"];
+            var _success = __HTTPResponseIsSuccess(_httpStatus);
             if (_success)
             {
                 __HTTPCacheTrace($"HTTP file get successful (status={_status}, httpStatus={_httpStatus})");

@@ -37,7 +37,7 @@ function HTTPCacheGetFile(_url, _destinationPath, _callback, _callbackData = und
             __HTTPCacheTrace($"File has been cached for \"{_url}\" ({_hash})");
         }
         
-        file_copy(__HTTPCacheGetPath(__hash), _destinationPath);
+        file_copy(__HTTPCacheGetPath(_hash), _destinationPath);
         
         if (is_callable(_callback))
         {
