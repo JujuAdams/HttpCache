@@ -33,7 +33,7 @@ function __HTTPCacheAsyncEvent()
                 _struct.response_headers = json_parse(json_encode(_responseHeaders));
                 
                 __HTTPCacheSaveString(_system.__cacheDirectory + __hash, json_stringify(_struct));
-                __HTTPCacheAdd(__hash);
+                __HTTPCacheAdd(__hash, __durationMins);
             }
             else
             {
@@ -65,7 +65,7 @@ function __HTTPCacheAsyncEvent()
                 __HTTPCacheTrace($"HTTP file get successful (status={_status}, httpStatus={_httpStatus})");
                 
                 file_copy(__HTTPCacheGetPath(__hash), __destination);
-                __HTTPCacheAdd(__hash);
+                __HTTPCacheAdd(__hash, __durationMins);
             }
             else
             {

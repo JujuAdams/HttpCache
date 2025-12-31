@@ -6,5 +6,5 @@ function HTTPCacheGetDurationMins()
 {
     static _system = __HTTPCacheSystem();
     
-    return _system.__cacheDurationMins;
+    return _system.__globalDurationMins;
 }

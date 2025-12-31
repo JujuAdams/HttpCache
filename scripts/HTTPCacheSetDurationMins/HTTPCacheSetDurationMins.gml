@@ -10,9 +10,9 @@ function HTTPCacheSetDurationMins(_minutes)
     
     _minutes = max(0, _minutes);
     
-    if (_system.__cacheDurationMins != _minutes)
+    if (_system.__globalDurationMins != _minutes)
     {
-        _system.__cacheDurationMins = _minutes;
+        _system.__globalDurationMins = _minutes;
         
         if (HTTP_CACHE_VERBOSE)
         {

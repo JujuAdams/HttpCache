@@ -16,11 +16,11 @@ function __HTTPCacheSystem()
         __httpRequestMap = ds_map_create();
         __httpFileMap    = ds_map_create();
         
-        __cacheDurationMins = 5;
+        __globalDurationMins = 5;
         
         if (HTTP_CACHE_VERBOSE)
         {
-            __HTTPCacheTrace($"Cache duration defaults to {__cacheDurationMins} minutes");
+            __HTTPCacheTrace($"Cache duration defaults to {__globalDurationMins} minutes");
         }
         
         if (HTTP_CACHE_CLEAR_ON_BOOT)

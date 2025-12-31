@@ -82,7 +82,7 @@ function HTTPCacheGetFile(_url, _destinationPath, _callback, _callbackData = und
                 __HTTPCacheTrace($"Executed `http_get_file()` for \"{_url}\" ({_hash})");
             }
             
-            _httpFileMap[? _requestID] = new __HTTPClassCacheFileGet(_hash, _destinationPath, _callback, _callbackData);
+            _httpFileMap[? _requestID] = new __HTTPClassCacheFileGet(_hash, _destinationPath, _callback, _callbackData, _system.__globalDurationMins);
         }
     }
 }

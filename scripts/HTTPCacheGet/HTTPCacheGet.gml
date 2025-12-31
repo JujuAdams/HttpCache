@@ -112,6 +112,6 @@ function HTTPCacheGet(_url, _callback, _callbackData = undefined, _ignoreCache =
             __HTTPCacheTrace($"Executed `http_get()` for \"{_url}\" ({_hash})");
         }
         
-        _httpRequestMap[? _requestID] = new __HTTPClassCacheRequest(_hash, _callback, _callbackData);
+        _httpRequestMap[? _requestID] = new __HTTPClassCacheRequest(_hash, _callback, _callbackData, _system.__globalDurationMins);
     }
 }

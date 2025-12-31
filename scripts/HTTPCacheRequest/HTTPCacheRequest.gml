@@ -119,6 +119,6 @@ function HTTPCacheRequest(_url, _method, _headerMap, _body, _callback, _callback
             __HTTPCacheTrace($"Executed `http_request()` for \"{_hashKey}\" ({_hash})");
         }
         
-        _requestDictionary[? _requestID] = new __HTTPClassCacheRequest(_hash, _callback, _callbackData);
+        _requestDictionary[? _requestID] = new __HTTPClassCacheRequest(_hash, _callback, _callbackData, _system.__globalDurationMins);
     }
 }
