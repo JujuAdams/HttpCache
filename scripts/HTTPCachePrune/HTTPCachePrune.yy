@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"HTTPCacheSetDuration",
+  "%Name":"HTTPCachePrune",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"HTTPCacheSetDuration",
+  "name":"HTTPCachePrune",
   "parent":{
     "name":"HTTP Cache",
     "path":"folders/HTTP Cache.yy",

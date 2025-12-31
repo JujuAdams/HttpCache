@@ -6,7 +6,7 @@ function __HTTPEnsureObject()
     {
         if (HTTP_CACHE_VERBOSE)
         {
-            __HTTPCacheTrace("Created HTTP Cache object instance");
+            __HTTPCacheTrace("Created HTTPCache object instance");
         }
         
         instance_create_depth(0, 0, 0, __objHTTPCache);

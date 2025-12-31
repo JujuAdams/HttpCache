@@ -1,9 +1,20 @@
 // Feather disable all
 
-/// Callback takes three parameters:
+/// Attempts to download a single file from the specified URL endpoint. If the request is
+/// successful, a file will be saved at the destination path that you specified when calling the
+/// function. Additionally, the downloaded file will be cached elsewhere on disk. Subsequent calls
+/// to this function will use the cached file on disk as the source rather than redownloading a
+/// file from the HTTP endpoint.
+/// 
+/// You should specify a callback to execute when HTTPCache receives a response. Your callback
+/// should take three parameters:
 /// - success
 /// - destinationPath
 /// - callbackData
+/// 
+/// Cached data will be considered valid for a limited time span, as determined by the duration set
+/// by `HTTPCacheSetDurationMins()` (the default timeout is 5 minutes). Cached data is stored on
+/// disk and can persist for hours or days if you so choose.
 /// 
 /// @param url
 /// @param destinationPath

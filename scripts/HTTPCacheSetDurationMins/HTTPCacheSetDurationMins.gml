@@ -1,8 +1,10 @@
 // Feather disable all
 
+/// Sets the duration for which *future* cached files will be considered valid.
+/// 
 /// @param minutes
 
-function HTTPCacheSetDuration(_minutes)
+function HTTPCacheSetDurationMins(_minutes)
 {
     static _system = __HTTPCacheSystem();
     

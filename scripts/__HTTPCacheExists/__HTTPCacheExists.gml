@@ -4,20 +4,5 @@
 
 function __HTTPCacheExists(_hash)
 {
-    static _cacheTimeMap = __HTTPCacheSystem().__cacheTimeMap;
-    
-    var _time = undefined;
-    try
-    {
-        _time = real(_cacheTimeMap[? _hash]);
-    }
-    catch(_error)
-    {
-        
-    }
-    
-    _time ??= 0;
-    if (__HTTPGetUTCTime() > _time) return false;
-    
-    return file_exists(__HTTPCacheGetPath(_hash));
+    return (__HTTPGetUTCTime() > __HTTPCacheGetElapsedTime(_hash))? false : file_exists(__HTTPCacheGetPath(_hash));
 }

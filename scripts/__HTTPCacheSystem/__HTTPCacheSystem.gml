@@ -17,44 +17,53 @@ function __HTTPCacheSystem()
         __httpFileMap    = ds_map_create();
         
         __cacheDurationMins = 5;
-        __cacheTimeMap = undefined;
         
-        try
+        if (HTTP_CACHE_VERBOSE)
         {
-            var _buffer = buffer_load(_system.__cacheDirectory + "manifest.json");
-            var _jsonString = buffer_read(_buffer, buffer_text);
-            buffer_delete(_buffer);
-            
-            __cacheTimeMap = json_decode(_jsonString);
-            __HTTPCacheTrace($"Loaded cache manifest successfully, {ds_map_size(__cacheTimeMap)} entries in cache");
-        }
-        catch(_error)
-        {
-            show_debug_message(json_stringify(_error, true));
-            __HTTPCacheTrace("Warning! Failed to load cache manifest");
+            __HTTPCacheTrace($"Cache duration defaults to {__cacheDurationMins} minutes");
         }
         
-        if ((__cacheTimeMap == undefined) || (not ds_exists(__cacheTimeMap, ds_type_map)))
+        if (HTTP_CACHE_CLEAR_ON_BOOT)
         {
             __cacheTimeMap = ds_map_create();
+            HTTPCacheClear();
         }
-        
-        var _i = 0;
-        var _keyArray = ds_map_keys_to_array(__cacheTimeMap);
-        repeat(array_length(_keyArray))
+        else
         {
-            var _key = _keyArray[_i];
-            if (not __HTTPCacheExists(_key))
+            var _manifestPath = _system.__cacheDirectory + "manifest.json";
+            if (not file_exists(_manifestPath))
             {
-                var _path = __HTTPCacheGetPath(_key);
-                if (file_exists(_path))
-                {
-                    __HTTPCacheTrace($"Cleaning up old cache entry \"{_key}\"");
-                    file_delete(_path);
-                }
+                __HTTPCacheTrace($"Could not find cache manifest \"{_manifestPath}\", clearing cache directory");
+                
+                __cacheTimeMap = ds_map_create();
+                HTTPCacheClear();
             }
-            
-            ++_i;
+            else
+            {
+                __cacheTimeMap = undefined;
+                
+                try
+                {
+                    var _buffer = buffer_load(_manifestPath);
+                    var _jsonString = buffer_read(_buffer, buffer_text);
+                    buffer_delete(_buffer);
+                    
+                    __cacheTimeMap = json_decode(_jsonString);
+                    __HTTPCacheTrace($"Loaded cache manifest successfully, {ds_map_size(__cacheTimeMap)} entries in cache");
+                }
+                catch(_error)
+                {
+                    show_debug_message(json_stringify(_error, true));
+                    __HTTPCacheTrace("Warning! Failed to load cache manifest");
+                }
+                
+                if ((__cacheTimeMap == undefined) || (not ds_exists(__cacheTimeMap, ds_type_map)))
+                {
+                    __cacheTimeMap = ds_map_create();
+                }
+                
+                HTTPCachePrune();
+            }
         }
     }
     
