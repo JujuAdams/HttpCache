@@ -8,5 +8,8 @@ function HTTPCacheClear()
     ds_map_clear(_httpRequestMap);
     directory_destroy(_system.__cacheDirectory);
     
-    __HTTPTrace("Cleared cache");
+    if (HTTP_CACHE_VERBOSE)
+    {
+        __HTTPCacheTrace("Cleared cache");
+    }
 }

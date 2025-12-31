@@ -6,6 +6,7 @@ function __HTTPCacheAsyncEvent()
     static _httpRequestMap = _system.__httpRequestMap;
     static _httpFileMap    = _system.__httpFileMap;
     
+    var _asyncMap = async_load;
     var _id = async_load[? "id"];
     
     //http_get() and http_request()
@@ -23,7 +24,10 @@ function __HTTPCacheAsyncEvent()
             var _success = __HTTPResponseIsSuccess(_httpStatus);
             if (_success)
             {
-                __HTTPTrace("HTTP request successful");
+                if (HTTP_CACHE_VERBOSE)
+                {
+                    __HTTPCacheTrace($"HTTP request successful (status={_status}, httpStatus={_httpStatus})");
+                }
                 
                 var _struct = json_parse(json_encode(async_load));
                 _struct.response_headers = json_parse(json_encode(_responseHeaders));
@@ -33,7 +37,11 @@ function __HTTPCacheAsyncEvent()
             }
             else
             {
-                __HTTPTrace("HTTP request failed");
+                if (HTTP_CACHE_VERBOSE)
+                {
+                    __HTTPCacheTrace($"HTTP request failed (status={_status}, httpStatus={_httpStatus})");
+                    __HTTPCacheTrace(_result);
+                }
             }
             
             if (is_callable(__callback))
@@ -54,14 +62,14 @@ function __HTTPCacheAsyncEvent()
             var _success = __HTTPResponseIsSuccess(async_load[? "http_status"]);
             if (_success)
             {
-                __HTTPTrace("HTTP file get successful");
+                __HTTPCacheTrace($"HTTP file get successful (status={_status}, httpStatus={_httpStatus})");
                 
                 file_copy(__HTTPCacheGetPath(__hash), __destination);
                 __HTTPCacheAdd(__hash);
             }
             else
             {
-                __HTTPTrace("HTTP file get failed");
+                __HTTPCacheTrace($"HTTP file get failed (status={_status}, httpStatus={_httpStatus})");
             }
             
             if (is_callable(__callback))

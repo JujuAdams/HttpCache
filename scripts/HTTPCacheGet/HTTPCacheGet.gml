@@ -9,8 +9,9 @@
 /// @param url
 /// @param callback
 /// @param [callbackData]
+/// @param [ignoreCache=false]
 
-function HTTPCacheGet(_url, _callback, _callbackData = undefined)
+function HTTPCacheGet(_url, _callback, _callbackData = undefined, _ignoreCache = false)
 {
     static _system = __HTTPCacheSystem();
     static _httpRequestMap = _system.__httpRequestMap;
@@ -18,10 +19,8 @@ function HTTPCacheGet(_url, _callback, _callbackData = undefined)
     __HTTPEnsureObject();
     
     var _hash = md5_string_utf8(_url);
-    if (__HTTPCacheExists(_hash))
+    if ((not _ignoreCache) && __HTTPCacheExists(_hash))
     {
-        __HTTPTrace("HTTP get has been cached");
-        
         if (not is_callable(_callback))
         {
             return;
@@ -40,11 +39,20 @@ function HTTPCacheGet(_url, _callback, _callbackData = undefined)
             catch(_error)
             {
                 show_debug_message(json_stringify(_error, true));
-                __HTTPTrace("Failed to parse cached data");
+                
+                if (HTTP_CACHE_VERBOSE)
+                {
+                    __HTTPCacheTrace($"Failed to parse cached data for \"{_url}\" ({_hash})");
+                }
             }
             
             if (_asyncLoad != undefined)
             {
+                if (HTTP_CACHE_VERBOSE)
+                {
+                    __HTTPCacheTrace($"Returning cached data for \"{_url}\" ({_hash})");
+                }
+                
                 call_later(1, time_source_units_frames, method({
                     __asyncLoad:    _asyncLoad,
                     __callback:     _callback,
@@ -69,7 +77,10 @@ function HTTPCacheGet(_url, _callback, _callbackData = undefined)
     var _requestID = http_get(_url);
     if (_requestID < 0)
     {
-        __HTTPTrace("HTTP get failed");
+        if (HTTP_CACHE_VERBOSE)
+        {
+            __HTTPCacheTrace($"`http_get()` failed for \"{_url}\" ({_hash})");
+        }
         
         if (is_callable(__callback))
         {
@@ -87,7 +98,10 @@ function HTTPCacheGet(_url, _callback, _callbackData = undefined)
     }
     else
     {
-        __HTTPTrace("Making HTTP get");
+        if (HTTP_CACHE_VERBOSE)
+        {
+            __HTTPCacheTrace($"Executed `http_get()` for \"{_url}\" ({_hash})");
+        }
         
         _httpRequestMap[? _requestID] = new __HTTPClassCacheRequest(_hash, _callback, _callbackData);
     }

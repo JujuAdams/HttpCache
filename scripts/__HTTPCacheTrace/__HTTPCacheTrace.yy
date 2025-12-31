@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"__HTTPTrace",
+  "%Name":"__HTTPCacheTrace",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"__HTTPTrace",
+  "name":"__HTTPCacheTrace",
   "parent":{
     "name":"(System)",
     "path":"folders/HTTP Cache/(System).yy",

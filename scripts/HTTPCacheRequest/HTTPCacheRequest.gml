@@ -12,8 +12,9 @@
 /// @param body
 /// @param callback
 /// @param [callbackData]
+/// @param [ignoreCache=false]
 
-function HTTPCacheRequest(_url, _method, _headerMap, _body, _callback, _callbackData = undefined)
+function HTTPCacheRequest(_url, _method, _headerMap, _body, _callback, _callbackData = undefined, _ignoreCache = false)
 {
     static _system = __HTTPCacheSystem();
     static _requestDictionary = _system.__httpRequestMap;
@@ -23,10 +24,8 @@ function HTTPCacheRequest(_url, _method, _headerMap, _body, _callback, _callback
     var _hashKey = $"{_url}::{_method}::{json_encode(_headerMap)}::{_body}";
     var _hash = md5_string_utf8(_hashKey);
     
-    if (__HTTPCacheExists(_hash))
+    if ((not _ignoreCache) && __HTTPCacheExists(_hash))
     {
-        __HTTPTrace("HTTP request has been cached");
-        
         if (not is_callable(_callback))
         {
             return;
@@ -45,11 +44,20 @@ function HTTPCacheRequest(_url, _method, _headerMap, _body, _callback, _callback
             catch(_error)
             {
                 show_debug_message(json_stringify(_error, true));
-                __HTTPTrace("Failed to parse cached data");
+                
+                if (HTTP_CACHE_VERBOSE)
+                {
+                    __HTTPCacheTrace($"Failed to parse cached data for \"{_hashKey}\" ({_hash})");
+                }
             }
             
             if (_asyncLoad != undefined)
             {
+                if (HTTP_CACHE_VERBOSE)
+                {
+                    __HTTPCacheTrace($"Returning cached data for \"{_hashKey}\" ({_hash})");
+                }
+                
                 call_later(1, time_source_units_frames, method({
                     __asyncLoad:    _asyncLoad,
                     __callback:     _callback,
@@ -74,7 +82,10 @@ function HTTPCacheRequest(_url, _method, _headerMap, _body, _callback, _callback
     var _requestID = http_request(_url, _method, _headerMap, _body);
     if (_requestID < 0)
     {
-        __HTTPTrace("HTTP request failed");
+        if (HTTP_CACHE_VERBOSE)
+        {
+            __HTTPCacheTrace($"`http_request()` failed for \"{_hashKey}\" ({_hash})");
+        }
         
         if (is_callable(__callback))
         {
@@ -92,7 +103,10 @@ function HTTPCacheRequest(_url, _method, _headerMap, _body, _callback, _callback
     }
     else
     {
-        __HTTPTrace("Making HTTP request");
+        if (HTTP_CACHE_VERBOSE)
+        {
+            __HTTPCacheTrace($"Executed `http_request()` for \"{_hashKey}\" ({_hash})");
+        }
         
         _requestDictionary[? _requestID] = new __HTTPClassCacheRequest(_hash, _callback, _callbackData);
     }
