@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"HTTPCacheClear",
   "parent":{
-    "name":"HTTP Cache",
-    "path":"folders/HTTP Cache.yy",
+    "name":"Miscellaneous",
+    "path":"folders/HTTP Cache/Miscellaneous.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

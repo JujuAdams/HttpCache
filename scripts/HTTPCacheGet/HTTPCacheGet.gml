@@ -48,11 +48,7 @@ function HTTPCacheGet(_url, _callback, _callbackData = undefined, _ignoreCache =
             catch(_error)
             {
                 show_debug_message(json_stringify(_error, true));
-                
-                if (HTTP_CACHE_VERBOSE)
-                {
-                    __HTTPCacheTrace($"Failed to parse cached data for \"{_url}\" ({_hash})");
-                }
+                __HTTPCacheTrace($"Warning! Failed to parse cached data for \"{_url}\" ({_hash})");
             }
             
             if (_asyncLoad != undefined)

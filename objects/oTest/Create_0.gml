@@ -11,3 +11,13 @@ HTTPCacheGetFile("https://www.webhamster.com/1.gif", "hamster.gif", function(_su
 {
     show_debug_message($"success = {_success}");
 });
+
+var _key = "test";
+var _value = HTTPCacheCustomGet(_key);
+if (_value == undefined)
+{
+    _value = date_datetime_string(date_current_datetime());
+    HTTPCacheCustomSet(_key, _value);
+}
+
+show_debug_message($"value = {_value}");

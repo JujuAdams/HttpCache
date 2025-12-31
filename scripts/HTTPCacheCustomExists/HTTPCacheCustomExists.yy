@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"HTTPCacheGetFile",
+  "%Name":"HTTPCacheCustomExists",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"HTTPCacheGetFile",
+  "name":"HTTPCacheCustomExists",
   "parent":{
-    "name":"HTTP",
-    "path":"folders/HTTP Cache/HTTP.yy",
+    "name":"Custom",
+    "path":"folders/HTTP Cache/Custom.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

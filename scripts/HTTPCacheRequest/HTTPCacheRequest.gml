@@ -55,11 +55,7 @@ function HTTPCacheRequest(_url, _method, _headerMap, _body, _callback, _callback
             catch(_error)
             {
                 show_debug_message(json_stringify(_error, true));
-                
-                if (HTTP_CACHE_VERBOSE)
-                {
-                    __HTTPCacheTrace($"Failed to parse cached data for \"{_hashKey}\" ({_hash})");
-                }
+                __HTTPCacheTrace($"Warning! Failed to parse cached data for \"{_hashKey}\" ({_hash})");
             }
             
             if (_asyncLoad != undefined)
