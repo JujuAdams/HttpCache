@@ -4,15 +4,19 @@
 
 function __HTTPCacheExists(_hash)
 {
-    if (not HTTP_CACHE_AVAILABLE)
-    {
-        return false;
-    }
+    static _cachedValueMap = __HTTPCacheSystem().__cachedValueMap;
     
     if (__HTTPGetUTCTime() > __HTTPCacheGetElapsedTime(_hash))
     {
         return false;
     }
     
-    return file_exists(__HTTPCacheGetPath(_hash));
+    if (HTTP_CACHE_DISK_AVAILABLE)
+    {
+        return file_exists(__HTTPCacheGetPath(_hash));
+    }
+    else
+    {
+        return ds_map_exists(_cachedValueMap, _hash);
+    }
 }

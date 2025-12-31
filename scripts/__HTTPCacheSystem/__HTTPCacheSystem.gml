@@ -12,9 +12,11 @@ function __HTTPCacheSystem()
         
         __cacheDirectory = game_save_id + "httpCache/";
         
+        //We use ds_map to contain hash information because struct keys leak memory when deleting keys.
         __nullMap        = ds_map_create(); //Avoids occasional `ds_map_destroy()` bugs
         __httpRequestMap = ds_map_create();
         __httpFileMap    = ds_map_create();
+        __cachedValueMap = ds_map_create(); //Only used when disk cache is unavailable
         
         __globalDurationMins = 5;
         
@@ -23,14 +25,9 @@ function __HTTPCacheSystem()
             __HTTPCacheTrace($"Cache duration defaults to {__globalDurationMins} minutes");
         }
         
-        if (not HTTP_CACHE_AVAILABLE)
-        {
-            __HTTPCacheTrace("Warning! Disk cache not available on this platform");
-            
-            __cacheTimeMap = ds_map_create();
-            HTTPCacheClear();
-        }
-        else if (HTTP_CACHE_CLEAR_ON_BOOT)
+        __HTTPCacheTrace($"HTTP_CACHE_DISK_AVAILABLE = {HTTP_CACHE_DISK_AVAILABLE? "true" : "false"}");
+        
+        if ((not HTTP_CACHE_DISK_AVAILABLE) || HTTP_CACHE_CLEAR_ON_BOOT)
         {
             __cacheTimeMap = ds_map_create();
             HTTPCacheClear();

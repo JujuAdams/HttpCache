@@ -7,16 +7,25 @@ function HTTPCacheClear()
 {
     static _system = __HTTPCacheSystem();
     static _httpRequestMap = _system.__httpRequestMap;
+    static _cachedValueMap = _system.__cachedValueMap;
     
     ds_map_clear(_httpRequestMap);
+    ds_map_clear(_cachedValueMap);
     
-    if (HTTP_CACHE_AVAILABLE)
+    if (HTTP_CACHE_DISK_AVAILABLE)
     {
         directory_destroy(_system.__cacheDirectory);
+        
+        if (HTTP_CACHE_VERBOSE)
+        {
+            __HTTPCacheTrace($"Cleared cache (deleted directory \"{_system.__cacheDirectory}\")");
+        }
     }
-    
-    if (HTTP_CACHE_VERBOSE)
+    else
     {
-        __HTTPCacheTrace($"Cleared cache (deleted directory \"{_system.__cacheDirectory}\")");
+        if (HTTP_CACHE_VERBOSE)
+        {
+            __HTTPCacheTrace($"Cleared cache");
+        }
     }
 }

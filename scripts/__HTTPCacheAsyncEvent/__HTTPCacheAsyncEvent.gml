@@ -5,6 +5,7 @@ function __HTTPCacheAsyncEvent()
     static _system         = __HTTPCacheSystem();
     static _httpRequestMap = _system.__httpRequestMap;
     static _httpFileMap    = _system.__httpFileMap;
+    static _cachedValueMap = _system.__cachedValueMap;
     
     var _id = async_load[? "id"];
     
@@ -28,11 +29,16 @@ function __HTTPCacheAsyncEvent()
                     __HTTPCacheTrace($"HTTP request successful (status={_status}, httpStatus={_httpStatus})");
                 }
                 
-                if (HTTP_CACHE_AVAILABLE)
+                var _struct = json_parse(json_encode(async_load));
+                _struct.response_headers = json_parse(json_encode(_responseHeaders));
+                
+                if (HTTP_CACHE_DISK_AVAILABLE)
                 {
-                    var _struct = json_parse(json_encode(async_load));
-                    _struct.response_headers = json_parse(json_encode(_responseHeaders));
                     __HTTPCacheSaveString(_system.__cacheDirectory + __hash, json_stringify(_struct));
+                }
+                else
+                {
+                    _cachedValueMap[? __hash] = _struct;
                 }
                 
                 __HTTPCacheAdd(__hash, __durationMins);
@@ -67,7 +73,7 @@ function __HTTPCacheAsyncEvent()
             {
                 __HTTPCacheTrace($"HTTP file get successful (status={_status}, httpStatus={_httpStatus})");
                 
-                if (HTTP_CACHE_AVAILABLE)
+                if (HTTP_CACHE_DISK_AVAILABLE)
                 {
                     file_copy(__HTTPCacheGetPath(__hash), __destination);
                     __HTTPCacheAdd(__hash, __durationMins);

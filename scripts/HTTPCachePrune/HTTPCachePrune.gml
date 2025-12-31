@@ -9,17 +9,8 @@
 
 function HTTPCachePrune()
 {
-    static _cacheTimeMap = __HTTPCacheSystem().__cacheTimeMap;
-    
-    if (HTTP_CACHE_AVAILABLE)
-    {
-        if (HTTP_CACHE_VERBOSE)
-        {
-            __HTTPCacheTrace("Warning! Cache pruning not supported on this platform");
-        }
-        
-        return;
-    }
+    static _cacheTimeMap   = __HTTPCacheSystem().__cacheTimeMap;
+    static _cachedValueMap = __HTTPCacheSystem().__cachedValueMap;
     
     if (HTTP_CACHE_VERBOSE)
     {
@@ -34,14 +25,21 @@ function HTTPCachePrune()
         
         if (not __HTTPCacheExists(_hash))
         {
-            var _path = __HTTPCacheGetPath(_hash);
-            
-            if (HTTP_CACHE_VERBOSE)
+            if (HTTP_CACHE_DISK_AVAILABLE)
             {
-                __HTTPCacheTrace($"{_i}: \"{_hash}\" elapsed at {date_datetime_string(__HTTPCacheGetElapsedTime(_hash))}. Deleting \"{_path}\"");
+                var _path = __HTTPCacheGetPath(_hash);
+                
+                if (HTTP_CACHE_VERBOSE)
+                {
+                    __HTTPCacheTrace($"{_i}: \"{_hash}\" elapsed at {date_datetime_string(__HTTPCacheGetElapsedTime(_hash))}. Deleting \"{_path}\"");
+                }
+                
+                file_delete(_path);
             }
-            
-            file_delete(_path);
+            else
+            {
+                ds_map_delete(_cachedValueMap, _hash);
+            }
         }
         else
         {

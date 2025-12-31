@@ -21,8 +21,18 @@
 function HTTPCacheCustomSet(_key, _value)
 {
     static _system = __HTTPCacheSystem();
+    static _cachedValueMap = _system.__cachedValueMap;
     
     var _hash = md5_string_utf8(_key);
-    __HTTPCacheSaveString(_system.__cacheDirectory + _hash, json_stringify(_value));
-    __HTTPCacheAdd(_hash, _system.__globalDurationMins);
+    
+    if (HTTP_CACHE_DISK_AVAILABLE)
+    {
+        __HTTPCacheSaveString(_system.__cacheDirectory + _hash, json_stringify(_value));
+        __HTTPCacheAdd(_hash, _system.__globalDurationMins);
+    }
+    else
+    {
+        _cachedValueMap[? _hash] = _value;
+        __HTTPCacheAdd(_hash, _system.__globalDurationMins);
+    }
 }

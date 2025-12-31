@@ -29,12 +29,13 @@ function HTTPCacheRequest(_url, _method, _headerMap, _body, _callback, _callback
 {
     static _system = __HTTPCacheSystem();
     static _requestDictionary = _system.__httpRequestMap;
+    static _cachedValueMap = _system.__cachedValueMap;
     
     __HTTPEnsureObject();
     
     var _hashKey = $"{_url}::{_method}::{json_encode(_headerMap)}::{_body}";
     var _hash = md5_string_utf8(_hashKey);
-    if (HTTP_CACHE_AVAILABLE && (not _ignoreCache) && __HTTPCacheExists(_hash))
+    if ((not _ignoreCache) && __HTTPCacheExists(_hash))
     {
         if (not is_callable(_callback))
         {
@@ -42,19 +43,26 @@ function HTTPCacheRequest(_url, _method, _headerMap, _body, _callback, _callback
         }
         else
         {
-            var _asyncLoad = undefined;
-            try
+            if (HTTP_CACHE_DISK_AVAILABLE)
             {
-                var _buffer = buffer_load(__HTTPCacheGetPath(_hash));
-                var _jsonString = buffer_read(_buffer, buffer_text);
-                buffer_delete(_buffer);
-                
-                _asyncLoad = json_decode(_jsonString);
+                var _asyncLoad = undefined;
+                try
+                {
+                    var _buffer = buffer_load(__HTTPCacheGetPath(_hash));
+                    var _jsonString = buffer_read(_buffer, buffer_text);
+                    buffer_delete(_buffer);
+                    
+                    _asyncLoad = json_decode(_jsonString);
+                }
+                catch(_error)
+                {
+                    show_debug_message(json_stringify(_error, true));
+                    __HTTPCacheTrace($"Warning! Failed to parse cached data for \"{_hashKey}\" ({_hash})");
+                }
             }
-            catch(_error)
+            else
             {
-                show_debug_message(json_stringify(_error, true));
-                __HTTPCacheTrace($"Warning! Failed to parse cached data for \"{_hashKey}\" ({_hash})");
+                var _asyncLoad = _cachedValueMap[? _hash];
             }
             
             if (_asyncLoad != undefined)

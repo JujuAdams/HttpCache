@@ -7,7 +7,7 @@ function __HTTPCacheSaveString(_path, _string)
 {
     static _buffer = buffer_create(1024, buffer_grow, 1);
     
-    if (HTTP_CACHE_AVAILABLE)
+    if (HTTP_CACHE_DISK_AVAILABLE)
     {
         buffer_seek(_buffer, buffer_seek_start, 0);
         buffer_write(_buffer, buffer_text, _string);

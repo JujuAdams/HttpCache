@@ -3,4 +3,4 @@
 #macro HTTP_CACHE_VERSION  "1.0.0"
 #macro HTTP_CACHE_DATE     "2025-12-31"
 
-#macro HTTP_CACHE_AVAILABLE  ((os_type == os_windows) || (os_type == os_macosx) || (os_type == os_linux) || (os_type == os_android) || (os_type == os_ios) || (os_type == os_tvos))
+#macro HTTP_CACHE_DISK_AVAILABLE  (HTTP_CACHE_USE_DISK && ((os_type == os_windows) || (os_type == os_macosx) || (os_type == os_linux) || (os_type == os_android) || (os_type == os_ios) || (os_type == os_tvos)))

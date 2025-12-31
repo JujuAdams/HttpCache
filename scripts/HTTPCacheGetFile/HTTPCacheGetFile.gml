@@ -29,7 +29,7 @@ function HTTPCacheGetFile(_url, _destinationPath, _callback, _callbackData = und
     
     __HTTPEnsureObject();
     
-    if (not HTTP_CACHE_AVAILABLE)
+    if (not HTTP_CACHE_DISK_AVAILABLE)
     {
         var _requestID = http_get_file(_url, _destinationPath);
         if (_requestID < 0)

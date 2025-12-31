@@ -24,11 +24,12 @@ function HTTPCacheGet(_url, _callback, _callbackData = undefined, _ignoreCache =
 {
     static _system = __HTTPCacheSystem();
     static _httpRequestMap = _system.__httpRequestMap;
+    static _cachedValueMap = _system.__cachedValueMap;
     
     __HTTPEnsureObject();
     
     var _hash = md5_string_utf8(_url);
-    if (HTTP_CACHE_AVAILABLE && (not _ignoreCache) && __HTTPCacheExists(_hash))
+    if ((not _ignoreCache) && __HTTPCacheExists(_hash))
     {
         if (not is_callable(_callback))
         {
@@ -36,19 +37,26 @@ function HTTPCacheGet(_url, _callback, _callbackData = undefined, _ignoreCache =
         }
         else
         {
-            var _asyncLoad = undefined;
-            try
+            if (HTTP_CACHE_DISK_AVAILABLE)
             {
-                var _buffer = buffer_load(__HTTPCacheGetPath(_hash));
-                var _jsonString = buffer_read(_buffer, buffer_text);
-                buffer_delete(_buffer);
-                
-                _asyncLoad = json_decode(_jsonString);
+                var _asyncLoad = undefined;
+                try
+                {
+                    var _buffer = buffer_load(__HTTPCacheGetPath(_hash));
+                    var _jsonString = buffer_read(_buffer, buffer_text);
+                    buffer_delete(_buffer);
+                    
+                    _asyncLoad = json_decode(_jsonString);
+                }
+                catch(_error)
+                {
+                    show_debug_message(json_stringify(_error, true));
+                    __HTTPCacheTrace($"Warning! Failed to parse cached data for \"{_url}\" ({_hash})");
+                }
             }
-            catch(_error)
+            else
             {
-                show_debug_message(json_stringify(_error, true));
-                __HTTPCacheTrace($"Warning! Failed to parse cached data for \"{_url}\" ({_hash})");
+                var _asyncLoad = _cachedValueMap[? _hash];
             }
             
             if (_asyncLoad != undefined)

@@ -18,11 +18,17 @@
 function HTTPCacheCustomGet(_key, _default = undefined)
 {
     static _system = __HTTPCacheSystem();
+    static _cachedValueMap = _system.__cachedValueMap;
     
     var _value = _default;
     
     var _hash = md5_string_utf8(_key);
-    if (HTTP_CACHE_AVAILABLE && __HTTPCacheExists(_hash))
+    
+    if (not HTTP_CACHE_DISK_AVAILABLE)
+    {
+        return _cachedValueMap[? _hash] ?? _default;
+    }
+    else if (__HTTPCacheExists(_hash))
     {
         try
         {
