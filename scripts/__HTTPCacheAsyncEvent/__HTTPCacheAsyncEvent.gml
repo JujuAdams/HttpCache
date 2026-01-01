@@ -34,7 +34,7 @@ function __HTTPCacheAsyncEvent()
                 
                 if (HTTP_CACHE_DISK_AVAILABLE)
                 {
-                    __HTTPCacheSaveString(_system.__cacheDirectory + __hash, json_stringify(_struct));
+                    __HTTPCacheSaveString(__HTTPCacheGetPath(__hash), json_stringify(_struct));
                 }
                 else
                 {
@@ -75,7 +75,11 @@ function __HTTPCacheAsyncEvent()
                 
                 if (HTTP_CACHE_DISK_AVAILABLE)
                 {
-                    file_copy(__HTTPCacheGetPath(__hash), __destination);
+                    if (__cachePath != __destinationPath)
+                    {
+                        file_copy(__cachePath, __destinationPath);
+                    }
+                    
                     __HTTPCacheAdd(__hash, __durationMins);
                 }
             }
@@ -86,7 +90,7 @@ function __HTTPCacheAsyncEvent()
             
             if (is_callable(__callback))
             {
-                __callback(_success, __destination, __callbackData);
+                __callback(_success, __destinationPath, __callbackData);
             }
         }
     }

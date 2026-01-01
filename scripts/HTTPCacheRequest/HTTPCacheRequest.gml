@@ -23,9 +23,9 @@
 /// @param body
 /// @param callback
 /// @param [callbackData]
-/// @param [ignoreCache=false]
+/// @param [forceRedownload=false]
 
-function HTTPCacheRequest(_url, _method, _headerMap, _body, _callback, _callbackData = undefined, _ignoreCache = false)
+function HTTPCacheRequest(_url, _method, _headerMap, _body, _callback, _callbackData = undefined, _forceRedownload = false)
 {
     static _system = __HTTPCacheSystem();
     static _requestDictionary = _system.__httpRequestMap;
@@ -35,7 +35,7 @@ function HTTPCacheRequest(_url, _method, _headerMap, _body, _callback, _callback
     
     var _hashKey = $"{_url}::{_method}::{json_encode(_headerMap)}::{_body}";
     var _hash = md5_string_utf8(_hashKey);
-    if ((not _ignoreCache) && __HTTPCacheExists(_hash))
+    if ((not _forceRedownload) && __HTTPCacheExists(_hash))
     {
         if (not is_callable(_callback))
         {

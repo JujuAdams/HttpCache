@@ -12,6 +12,10 @@
 /// - destinationPath
 /// - callbackData
 /// 
+/// Ordinarily, you'll want to save the downloaded file to a specific location. However, if you
+/// want to only use cached files and don't care about where the files are stored then you may
+/// pass `undefined` for the destination path.
+/// 
 /// Cached data will be considered valid for a limited time span, as determined by the duration set
 /// by `HTTPCacheSetDurationMins()` (the default timeout is 5 minutes). Cached data is stored on
 /// disk and can persist for hours or days if you so choose.
@@ -20,14 +24,18 @@
 /// @param destinationPath
 /// @param callback
 /// @param [callbackData]
-/// @param [ignoreCache=false]
+/// @param [forceRedownload=false]
 
-function HTTPCacheGetFile(_url, _destinationPath, _callback, _callbackData = undefined, _ignoreCache = false)
+function HTTPCacheGetFile(_url, _destinationPath, _callback, _callbackData = undefined, _forceRedownload = false)
 {
     static _system = __HTTPCacheSystem();
     static _httpFileMap = _system.__httpFileMap;
     
     __HTTPEnsureObject();
+    
+    var _hash = md5_string_utf8(_url);
+    var _cachePath = __HTTPCacheGetPath(_hash);
+    _destinationPath ??= _cachePath;
     
     if (not HTTP_CACHE_DISK_AVAILABLE)
     {
@@ -42,13 +50,14 @@ function HTTPCacheGetFile(_url, _destinationPath, _callback, _callbackData = und
             if (is_callable(__callback))
             {
                 call_later(1, time_source_units_frames, method({
-                    __destination:  _destinationPath,
-                    __callback:     _callback,
-                    __callbackData: _callbackData,
+                    __cachePath:       _cachePath,
+                    __destinationPath: _destinationPath,
+                    __callback:        _callback,
+                    __callbackData:    _callbackData,
                 },
                 function()
                 {
-                    __callback(false, __destination, __callbackData);
+                    __callback(false, __destinationPath, __callbackData);
                 }), false);
             }
         }
@@ -64,26 +73,26 @@ function HTTPCacheGetFile(_url, _destinationPath, _callback, _callbackData = und
     }
     else
     {
-        var _hash = md5_string_utf8(_url);
-        if ((not _ignoreCache) && __HTTPCacheExists(_hash))
+        if ((not _forceRedownload) && __HTTPCacheExists(_hash))
         {
             if (HTTP_CACHE_VERBOSE)
             {
                 __HTTPCacheTrace($"File has been cached for \"{_url}\" ({_hash})");
             }
             
-            file_copy(__HTTPCacheGetPath(_hash), _destinationPath);
+            file_copy(_cachePath, _destinationPath);
             
             if (is_callable(_callback))
             {
                 call_later(1, time_source_units_frames, method({
-                    __destination:  _destinationPath,
-                    __callback:     _callback,
-                    __callbackData: _callbackData,
+                    __cachePath:       _cachePath,
+                    __destinationPath: _destinationPath,
+                    __callback:        _callback,
+                    __callbackData:    _callbackData,
                 },
                 function()
                 {
-                    __callback(true, __destination, __callbackData);
+                    __callback(true, __destinationPath, __callbackData);
                 }), false);
             }
         }
@@ -100,13 +109,14 @@ function HTTPCacheGetFile(_url, _destinationPath, _callback, _callbackData = und
                 if (is_callable(__callback))
                 {
                     call_later(1, time_source_units_frames, method({
-                        __destination:  _destinationPath,
-                        __callback:     _callback,
-                        __callbackData: _callbackData,
+                        __cachePath:       _cachePath,
+                        __destinationPath: _destinationPath,
+                        __callback:        _callback,
+                        __callbackData:    _callbackData,
                     },
                     function()
                     {
-                        __callback(false, __destination, __callbackData);
+                        __callback(false, __destinationPath, __callbackData);
                     }), false);
                 }
             }

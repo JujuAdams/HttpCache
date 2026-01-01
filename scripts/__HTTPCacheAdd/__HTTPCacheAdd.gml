@@ -19,6 +19,6 @@ function __HTTPCacheAdd(_hash, _durationMins)
     
     if (HTTP_CACHE_DISK_AVAILABLE)
     {
-        __HTTPCacheSaveString(_system.__cacheDirectory + "manifest.json", json_encode(_cacheTimeMap));
+        __HTTPCacheSaveString(__HTTPCacheGetPath("manifest.json"), json_encode(_cacheTimeMap));
     }
 }

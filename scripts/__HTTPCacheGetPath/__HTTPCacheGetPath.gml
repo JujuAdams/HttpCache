@@ -1,9 +1,9 @@
 // Feather disable all
 
-/// @param hash
+/// @param localPath
 
-function __HTTPCacheGetPath(_hash)
+function __HTTPCacheGetPath(_localPath)
 {
     static _system = __HTTPCacheSystem();
-    return _system.__cacheDirectory + _hash;
+    return $"{_system.__cacheDirectory}{_localPath}";
 }

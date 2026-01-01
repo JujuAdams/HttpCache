@@ -34,7 +34,7 @@ function __HTTPCacheSystem()
         }
         else
         {
-            var _manifestPath = _system.__cacheDirectory + "manifest.json";
+            var _manifestPath = __HTTPCacheGetPath("manifest.json");
             if (not file_exists(_manifestPath))
             {
                 __HTTPCacheTrace($"Could not find cache manifest \"{_manifestPath}\", clearing cache directory");

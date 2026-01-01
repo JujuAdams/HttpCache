@@ -27,7 +27,7 @@ function HTTPCacheCustomSet(_key, _value)
     
     if (HTTP_CACHE_DISK_AVAILABLE)
     {
-        __HTTPCacheSaveString(_system.__cacheDirectory + _hash, json_stringify(_value));
+        __HTTPCacheSaveString(__HTTPCacheGetPath(_hash), json_stringify(_value));
         __HTTPCacheAdd(_hash, _system.__globalDurationMins);
     }
     else

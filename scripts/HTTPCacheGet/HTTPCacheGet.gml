@@ -18,9 +18,9 @@
 /// @param url
 /// @param callback
 /// @param [callbackData]
-/// @param [ignoreCache=false]
+/// @param [forceRedownload=false]
 
-function HTTPCacheGet(_url, _callback, _callbackData = undefined, _ignoreCache = false)
+function HTTPCacheGet(_url, _callback, _callbackData = undefined, _forceRedownload = false)
 {
     static _system = __HTTPCacheSystem();
     static _httpRequestMap = _system.__httpRequestMap;
@@ -29,7 +29,7 @@ function HTTPCacheGet(_url, _callback, _callbackData = undefined, _ignoreCache =
     __HTTPEnsureObject();
     
     var _hash = md5_string_utf8(_url);
-    if ((not _ignoreCache) && __HTTPCacheExists(_hash))
+    if ((not _forceRedownload) && __HTTPCacheExists(_hash))
     {
         if (not is_callable(_callback))
         {
