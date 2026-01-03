@@ -10,7 +10,8 @@ HTTPCacheGet("https://www.google.com", function(_success, _result, _responseHead
 HTTPCacheGetFile("https://www.webhamster.com/1.gif", "hamster.gif", function(_success, _destinationPath, _callbackData)
 {
     show_debug_message($"success = {_success}");
-});
+},
+undefined, ".gif");
 
 var _key = "test";
 var _value = HTTPCacheCustomGet(_key);
