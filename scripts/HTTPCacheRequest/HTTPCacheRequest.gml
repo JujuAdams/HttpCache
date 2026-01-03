@@ -24,8 +24,9 @@
 /// @param callback
 /// @param [callbackData]
 /// @param [forceRedownload=false]
+/// @param [hashKey]
 
-function HttpCacheRequest(_url, _method, _headerMap, _body, _callback, _callbackData = undefined, _forceRedownload = false)
+function HttpCacheRequest(_url, _method, _headerMap, _body, _callback, _callbackData = undefined, _forceRedownload = false, _hashKey = undefined)
 {
     static _system = __HttpCacheSystem();
     static _requestDictionary = _system.__httpRequestMap;
@@ -33,8 +34,13 @@ function HttpCacheRequest(_url, _method, _headerMap, _body, _callback, _callback
     
     __HTTPEnsureObject();
     
-    var _hashKey = $"{_url}::{_method}::{json_encode(_headerMap)}::{_body}";
+    if (_hashKey == undefined)
+    {
+        _hashKey = $"{_url}::{_method}::{json_encode(_headerMap)}::{_body}";
+    }
+    
     var _hash = md5_string_utf8(_hashKey);
+    
     if ((not _forceRedownload) && __HttpCacheExists(_hash))
     {
         if (not is_callable(_callback))
