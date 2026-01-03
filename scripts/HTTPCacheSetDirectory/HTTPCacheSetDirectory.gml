@@ -8,13 +8,13 @@
 /// 
 /// @param path
 
-function HTTPCacheSetDirectory(_path)
+function HttpCacheSetDirectory(_path)
 {
-    static _system = __HTTPCacheSystem();
+    static _system = __HttpCacheSystem();
     
     if (_path != _system.__cacheDirectory)
     {
-        HTTPCacheClear();
+        HttpCacheClear();
         _system.__cacheDirectory = _path;
     }
 }
