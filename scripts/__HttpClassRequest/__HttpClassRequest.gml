@@ -88,8 +88,8 @@ function __HttpClassRequest(_url, _method, _headerMap, _body, _callback, _callba
             }
         }
         
-        var _requestID = http_request(__url, __method, __headerMap, __body);
-        if (_requestID < 0)
+        __requestID = http_request(__url, __method, __headerMap, __body);
+        if (__requestID < 0)
         {
             if (HTTP_CACHE_VERBOSE)
             {
@@ -113,7 +113,7 @@ function __HttpClassRequest(_url, _method, _headerMap, _body, _callback, _callba
                 __HttpCacheTrace($"Executed `http_request()` for \"{__hashKey}\" ({__hash})");
             }
             
-            _requestDictionary[? _requestID] = new __HttpClassCacheRequest(__hash, __callback, __callbackData, __cacheLifetime);
+            _httpRequestMap[? __requestID] = self;
         }
     }
 }

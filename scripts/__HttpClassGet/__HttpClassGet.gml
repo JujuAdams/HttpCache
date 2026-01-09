@@ -113,7 +113,7 @@ function __HttpClassGet(_url, _callback, _callbackData, _forceRedownload, _hashK
                 __HttpCacheTrace($"Executed `http_get()` for \"{__url}\" ({__hash})");
             }
             
-            _httpRequestMap[? __requestID] = new __HttpClassCacheRequest(__hash, __callback, __callbackData, __cacheLifetime);
+            _httpRequestMap[? __requestID] = self;
         }
     }
 }

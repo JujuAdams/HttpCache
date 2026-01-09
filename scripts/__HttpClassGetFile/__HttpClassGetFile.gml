@@ -59,12 +59,10 @@ function __HttpClassGetFile(_url, _destinationPath, _callback, _callbackData, _f
     {
         __HTTPEnsureObject();
         
-        var _requestID = -1;
-        
         if (not HTTP_CACHE_DISK_AVAILABLE)
         {
-            _requestID = http_get_file(__url, __destinationPath);
-            if (_requestID < 0)
+            __requestID = http_get_file(__url, __destinationPath);
+            if (__requestID < 0)
             {
                 if (HTTP_CACHE_VERBOSE)
                 {
@@ -86,7 +84,7 @@ function __HttpClassGetFile(_url, _destinationPath, _callback, _callbackData, _f
                     __HttpCacheTrace($"Executed `http_get_file()` for \"{__url}\"");
                 }
                 
-                _httpFileMap[? _requestID] = new __HTTPClassCacheFileGet(undefined, __destinationPath, __callback, __callbackData, __cacheLifetime);
+                _httpFileMap[? __requestID] = self;
             }
         }
         else
@@ -110,8 +108,8 @@ function __HttpClassGetFile(_url, _destinationPath, _callback, _callbackData, _f
             }
             else
             {
-                _requestID = http_get_file(__url, __HttpCacheGetPath(__hash));
-                if (_requestID < 0)
+                __requestID = http_get_file(__url, __HttpCacheGetPath(__hash));
+                if (__requestID < 0)
                 {
                     if (HTTP_CACHE_VERBOSE)
                     {
@@ -133,11 +131,9 @@ function __HttpClassGetFile(_url, _destinationPath, _callback, _callbackData, _f
                         __HttpCacheTrace($"Executed `http_get_file()` for \"{__url}\" ({__hash})");
                     }
                     
-                    _httpFileMap[? _requestID] = new __HTTPClassCacheFileGet(__hash, __destinationPath, __callback, __callbackData, __cacheLifetime);
+                    _httpFileMap[? __requestID] = self;
                 }
             }
         }
-        
-        return _requestID;
     }
 }

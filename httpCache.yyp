@@ -39,8 +39,6 @@
     {"id":{"name":"__HttpCacheSaveString","path":"scripts/__HttpCacheSaveString/__HttpCacheSaveString.yy",},},
     {"id":{"name":"__HttpCacheSystem","path":"scripts/__HttpCacheSystem/__HttpCacheSystem.yy",},},
     {"id":{"name":"__HttpCacheTrace","path":"scripts/__HttpCacheTrace/__HttpCacheTrace.yy",},},
-    {"id":{"name":"__HttpClassCacheFileGet","path":"scripts/__HttpClassCacheFileGet/__HttpClassCacheFileGet.yy",},},
-    {"id":{"name":"__HttpClassCacheRequest","path":"scripts/__HttpClassCacheRequest/__HttpClassCacheRequest.yy",},},
     {"id":{"name":"__HttpClassGet","path":"scripts/__HttpClassGet/__HttpClassGet.yy",},},
     {"id":{"name":"__HttpClassGetFile","path":"scripts/__HttpClassGetFile/__HttpClassGetFile.yy",},},
     {"id":{"name":"__HttpClassRequest","path":"scripts/__HttpClassRequest/__HttpClassRequest.yy",},},
