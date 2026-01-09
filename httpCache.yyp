@@ -36,6 +36,7 @@
     {"id":{"name":"__HttpCacheExists","path":"scripts/__HttpCacheExists/__HttpCacheExists.yy",},},
     {"id":{"name":"__HttpCacheGetElapsedTime","path":"scripts/__HttpCacheGetElapsedTime/__HttpCacheGetElapsedTime.yy",},},
     {"id":{"name":"__HttpCacheGetPath","path":"scripts/__HttpCacheGetPath/__HttpCacheGetPath.yy",},},
+    {"id":{"name":"__HttpCacheQueue","path":"scripts/__HttpCacheQueue/__HttpCacheQueue.yy",},},
     {"id":{"name":"__HttpCacheSaveString","path":"scripts/__HttpCacheSaveString/__HttpCacheSaveString.yy",},},
     {"id":{"name":"__HttpCacheSystem","path":"scripts/__HttpCacheSystem/__HttpCacheSystem.yy",},},
     {"id":{"name":"__HttpCacheTrace","path":"scripts/__HttpCacheTrace/__HttpCacheTrace.yy",},},

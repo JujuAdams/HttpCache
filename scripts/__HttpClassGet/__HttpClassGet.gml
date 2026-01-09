@@ -23,23 +23,39 @@ function __HttpClassGet(_url, _callback, _callbackData, _forceRedownload, _hashK
     
     __asyncLoad = undefined;
     __requestID = undefined;
+    __started   = false;
+    __finished  = false;
     
     
+    
+    static GetStarted = function()
+    {
+        return __started;
+    }
+    
+    static GetFinished = function()
+    {
+        return __finished;
+    }
     
     static GetRequestID = function()
     {
         return __requestID;
     }
     
-    static __Execute = function()
+    static __Start = function()
     {
         __HTTPEnsureObject();
+        
+        __started = true;
         
         if ((not __forceRedownload) && __HttpCacheExists(__hash))
         {
             if (not is_callable(__callback))
             {
-                return -1;
+                __requestID = -1;
+                __finished  = true;
+                return;
             }
             else
             {
@@ -81,9 +97,11 @@ function __HttpClassGet(_url, _callback, _callbackData, _forceRedownload, _hashK
                         
                         ds_map_destroy(__asyncLoad);
                         __asyncLoad = undefined;
+                        __finished = true;
                     });
                     
-                    return -1;
+                    __requestID = -1;
+                    return;
                 }
             }
         }
@@ -103,7 +121,13 @@ function __HttpClassGet(_url, _callback, _callbackData, _forceRedownload, _hashK
                     var _responseHeaders = ds_map_create();
                     __callback(false, "", _responseHeaders, __callbackData);
                     ds_map_destroy(_responseHeaders);
+                    
+                    __finished = true;
                 });
+            }
+            else
+            {
+                __finished = true;
             }
         }
         else

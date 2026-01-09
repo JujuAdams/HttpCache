@@ -27,7 +27,19 @@ function HttpCacheGet(_url, _callback, _callbackData = undefined, _delay = 0, _f
     __HTTPEnsureObject();
     
     var _struct = new __HttpClassGet(_url, _callback, _callbackData, _forceRedownload, _hashKey);
-    call_later(max(1, _delay), time_source_units_frames, method(_struct, _struct.__Execute));
+    
+    if (_delay > 0)
+    {
+        call_later(max(1, _delay), time_source_units_frames, method(_struct, _struct.__Start));
+    }
+    else if (_delay == 0)
+    {
+        _struct.__Start();
+    }
+    else
+    {
+        __HttpCacheQueue(_struct);
+    }
     
     return _struct;
 }

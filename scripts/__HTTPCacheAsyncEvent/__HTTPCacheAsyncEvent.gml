@@ -56,6 +56,8 @@ function __HttpCacheAsyncEvent()
             {
                 __callback(_success, _result, _responseHeaders, __callbackData);
             }
+            
+            __finished = true;
         }
     }
     
@@ -96,6 +98,8 @@ function __HttpCacheAsyncEvent()
             {
                 __callback(_success, __destinationPath, __callbackData);
             }
+            
+            __finished = true;
         }
     }
 }

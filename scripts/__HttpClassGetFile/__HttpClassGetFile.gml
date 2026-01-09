@@ -37,8 +37,20 @@ function __HttpClassGetFile(_url, _destinationPath, _callback, _callbackData, _f
     __destinationPath ??= __cachePath;
     
     __requestID = undefined;
+    __started   = false;
+    __finished  = false;
     
     
+    
+    static GetStarted = function()
+    {
+        return __started;
+    }
+    
+    static GetFinished = function()
+    {
+        return __finished;
+    }
     
     static GetDestinationPath = function()
     {
@@ -55,9 +67,11 @@ function __HttpClassGetFile(_url, _destinationPath, _callback, _callbackData, _f
         return __requestID;
     }
     
-    static __Execute = function()
+    static __Start = function()
     {
         __HTTPEnsureObject();
+        
+        __started = true;
         
         if (not HTTP_CACHE_DISK_AVAILABLE)
         {
@@ -74,7 +88,12 @@ function __HttpClassGetFile(_url, _destinationPath, _callback, _callbackData, _f
                     call_later(1, time_source_units_frames, function()
                     {
                         __callback(false, __destinationPath, __callbackData);
+                        __finished = true;
                     });
+                }
+                else
+                {
+                    __finished = true;
                 }
             }
             else
@@ -103,7 +122,12 @@ function __HttpClassGetFile(_url, _destinationPath, _callback, _callbackData, _f
                     call_later(1, time_source_units_frames, function()
                     {
                         __callback(true, __destinationPath, __callbackData);
+                        __finished = true;
                     });
+                }
+                else
+                {
+                    __finished = true;
                 }
             }
             else
@@ -121,7 +145,12 @@ function __HttpClassGetFile(_url, _destinationPath, _callback, _callbackData, _f
                         call_later(1, time_source_units_frames, function()
                         {
                             __callback(false, __destinationPath, __callbackData);
+                            __finished = true;
                         });
+                    }
+                    else
+                    {
+                        __finished = true;
                     }
                 }
                 else

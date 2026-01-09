@@ -32,7 +32,19 @@ function HttpCacheRequest(_url, _method, _headerMap, _body, _callback, _callback
     __HTTPEnsureObject();
     
     var _struct = new __HttpClassRequest(_url, _method, _headerMap, _body, _callback, _callbackData, _forceRedownload, _hashKey);
-    call_later(max(1, _delay), time_source_units_frames, method(_struct, _struct.__Execute));
+    
+    if (_delay > 0)
+    {
+        call_later(max(1, _delay), time_source_units_frames, method(_struct, _struct.__Start));
+    }
+    else if (_delay == 0)
+    {
+        _struct.__Start();
+    }
+    else
+    {
+        __HttpCacheQueue(_struct);
+    }
     
     return _struct;
 }
