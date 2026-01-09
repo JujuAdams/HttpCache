@@ -19,7 +19,7 @@ function __HttpClassGetFile(_url, _destinationPath, _callback, _callbackData, _f
     __forceRedownload    = _forceRedownload;
     __hashKey            = _hashKey;
     
-    __cacheLifetime = _system.__globalDurationMins;
+    __cacheLifetime = _system.__globalLifetimeMins;
     __hash = md5_string_utf8(__hashKey);
     
     if (is_string(__destinationPath))

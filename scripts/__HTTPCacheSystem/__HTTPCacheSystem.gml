@@ -18,11 +18,11 @@ function __HttpCacheSystem()
         __cachedValueMap = ds_map_create(); //Only used when disk cache is unavailable
         __cacheTimeMap   = ds_map_create();
         
-        __globalDurationMins = 5;
+        __globalLifetimeMins = 5;
         
         if (HTTP_CACHE_VERBOSE)
         {
-            __HttpCacheTrace($"Cache duration defaults to {__globalDurationMins} minutes");
+            __HttpCacheTrace($"Cache lifetime defaults to {__globalLifetimeMins} minutes");
         }
         
         __HttpCacheTrace($"HTTP_CACHE_DISK_AVAILABLE = {HTTP_CACHE_DISK_AVAILABLE? "true" : "false"}");

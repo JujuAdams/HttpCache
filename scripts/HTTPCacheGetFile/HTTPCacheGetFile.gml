@@ -17,7 +17,7 @@
 /// pass `undefined` for the destination path.
 /// 
 /// Cached data will be considered valid for a limited time span, as determined by the duration set
-/// by `HttpCacheSetDurationMins()` (the default timeout is 5 minutes). Cached data is stored on
+/// by `HttpCacheSetLifetimeMins()` (the default timeout is 5 minutes). Cached data is stored on
 /// disk and can persist for hours or days if you so choose.
 /// 
 /// @param url

@@ -24,7 +24,7 @@ function __HttpClassRequest(_url, _method, _headerMap, _body, _callback, _callba
     __forceRedownload = _forceRedownload;
     __hashKey         = _hashKey ?? $"{_url}::{_method}::{json_encode(_headerMap)}::{_body}";
     
-    __cacheLifetime = _system.__globalDurationMins;
+    __cacheLifetime = _system.__globalLifetimeMins;
     __hash = md5_string_utf8(_hashKey);
     
     __asyncLoad = undefined;

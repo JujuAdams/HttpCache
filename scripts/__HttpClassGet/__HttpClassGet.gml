@@ -18,7 +18,7 @@ function __HttpClassGet(_url, _callback, _callbackData, _forceRedownload, _hashK
     __forceRedownload = _forceRedownload;
     __hashKey         = _hashKey;
     
-    __cacheLifetime = _system.__globalDurationMins;
+    __cacheLifetime = _system.__globalLifetimeMins;
     __hash = md5_string_utf8(__hashKey);
     
     __asyncLoad = undefined;
