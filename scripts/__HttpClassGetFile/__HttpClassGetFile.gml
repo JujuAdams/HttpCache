@@ -1,0 +1,143 @@
+// Feather disable all
+
+/// @param url
+/// @param destinationPath
+/// @param callback
+/// @param callbackData
+/// @param forceRedownload
+/// @param hashKey
+
+function __HttpClassGetFile(_url, _destinationPath, _callback, _callbackData, _forceRedownload, _hashKey) constructor
+{
+    static _system = __HttpCacheSystem();
+    static _httpFileMap = _system.__httpFileMap;
+    
+    __url                = _url;
+    __destinationPath    = _destinationPath;
+    __callback           = _callback;
+    __callbackData       = _callbackData;
+    __forceRedownload    = _forceRedownload;
+    __hashKey            = _hashKey;
+    
+    __cacheLifetime = _system.__globalDurationMins;
+    __hash = md5_string_utf8(__hashKey);
+    
+    if (is_string(__destinationPath))
+    {
+        if ((string_pos("/", __destinationPath) <= 0) && (string_pos("\\", __destinationPath) <= 0) && (string_pos(".", __destinationPath) > 0))
+        {
+            if (filename_change_ext(filename_name(__destinationPath), "") == "")
+            {
+                __hash += filename_ext(__destinationPath);
+            }
+        }
+    }
+    
+    __cachePath = __HttpCacheGetPath(__hash);
+    __destinationPath ??= __cachePath;
+    
+    __requestID = undefined;
+    
+    
+    
+    static GetDestinationPath = function()
+    {
+        return __destinationPath;
+    }
+    
+    static GetCachePath = function()
+    {
+        return __cachePath;
+    }
+    
+    static GetRequestID = function()
+    {
+        return __requestID;
+    }
+    
+    static __Execute = function()
+    {
+        __HTTPEnsureObject();
+        
+        var _requestID = -1;
+        
+        if (not HTTP_CACHE_DISK_AVAILABLE)
+        {
+            _requestID = http_get_file(__url, __destinationPath);
+            if (_requestID < 0)
+            {
+                if (HTTP_CACHE_VERBOSE)
+                {
+                    __HttpCacheTrace($"`http_get_file()` failed for \"{__url}\"");
+                }
+                
+                if (is_callable(__callback))
+                {
+                    call_later(1, time_source_units_frames, function()
+                    {
+                        __callback(false, __destinationPath, __callbackData);
+                    });
+                }
+            }
+            else
+            {
+                if (HTTP_CACHE_VERBOSE)
+                {
+                    __HttpCacheTrace($"Executed `http_get_file()` for \"{__url}\"");
+                }
+                
+                _httpFileMap[? _requestID] = new __HTTPClassCacheFileGet(undefined, __destinationPath, __callback, __callbackData, __cacheLifetime);
+            }
+        }
+        else
+        {
+            if ((not __forceRedownload) && __HttpCacheExists(__hash))
+            {
+                if (HTTP_CACHE_VERBOSE)
+                {
+                    __HttpCacheTrace($"File has been cached for \"{__url}\" ({__hash})");
+                }
+                
+                file_copy(__cachePath, __destinationPath);
+                
+                if (is_callable(__callback))
+                {
+                    call_later(1, time_source_units_frames, function()
+                    {
+                        __callback(true, __destinationPath, __callbackData);
+                    });
+                }
+            }
+            else
+            {
+                _requestID = http_get_file(__url, __HttpCacheGetPath(__hash));
+                if (_requestID < 0)
+                {
+                    if (HTTP_CACHE_VERBOSE)
+                    {
+                        __HttpCacheTrace($"`http_get_file()` failed for \"{__url}\" ({__hash})");
+                    }
+                    
+                    if (is_callable(__callback))
+                    {
+                        call_later(1, time_source_units_frames, function()
+                        {
+                            __callback(false, __destinationPath, __callbackData);
+                        });
+                    }
+                }
+                else
+                {
+                    if (HTTP_CACHE_VERBOSE)
+                    {
+                        __HttpCacheTrace($"Executed `http_get_file()` for \"{__url}\" ({__hash})");
+                    }
+                    
+                    _httpFileMap[? _requestID] = new __HTTPClassCacheFileGet(__hash, __destinationPath, __callback, __callbackData, __cacheLifetime);
+                }
+            }
+        }
+        
+        return _requestID;
+    }
+}

@@ -7,11 +7,10 @@ HttpCacheGet("https://www.google.com", function(_success, _result, _responseHead
     show_debug_message($"result = {_result}");
 });
 
-HttpCacheGetFile("https://www.webhamster.com/1.gif", "hamster.gif", function(_success, _destinationPath, _callbackData)
+HttpCacheGetFile("https://www.webhamster.com/1.gif", ".gif", function(_success, _destinationPath, _callbackData)
 {
     show_debug_message($"success = {_success}");
-},
-undefined, ".gif");
+});
 
 var _key = "test";
 var _value = HttpCacheCustomGet(_key);

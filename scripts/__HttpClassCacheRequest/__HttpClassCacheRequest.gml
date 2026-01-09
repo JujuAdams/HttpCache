@@ -5,7 +5,7 @@
 /// @param callbackData
 /// @param durationMins
 
-function __HTTPClassCacheRequest(_hash, _callback, _callbackData, _durationMins) constructor
+function __HttpClassCacheRequest(_hash, _callback, _callbackData, _durationMins) constructor
 {
     __hash         = _hash;
     __callback     = _callback;
